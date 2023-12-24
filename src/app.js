@@ -1,6 +1,7 @@
 import express from "express";
 import conectaNaDatabase  from "./config/dbConnect.js";
-import livro from "./models/Livro.js";
+import routes from "./routes/index.js";
+
 
 const conexao = await conectaNaDatabase();
 
@@ -13,35 +14,7 @@ conexao.once("open", ()=>{
 })
 
 const app = express();
-app.use(express.json());
-
-
-app.get("/", (req, res) =>{
-    res.status(200)
-    .send("Primeiro app express")
-});
-
-app.get("/livros", async (req, res) => {
-    const listaLivros = await livro.find({})
-    res.status(200)
-    .json(listaLivros);
-});
-
-app.get("/livros/:id", (req, res) =>{
-    const index = buscaLivro(req.params.id);
-    res.status(200).json(livros[index]);
-})
-
-app.post("/livros", (req, res) => {
-    livros.push(req.body);
-    res.status(201).send("livro cadastrado com sucesso")
-})
-
-app.put("/livros/:id", (req, res) =>{
-    const index = buscaLivro(req.params.id);
-    livros[index].titulo = req.body.titulo;
-    res.status(200).json(livros)
-})
+routes(app)
 
 
 app.delete("/livros/:id", (req, res) => {
@@ -53,12 +26,3 @@ export default app;
 
 
 
-
-/**
- *  DB infos
- *  Username: admin
- *  Password: admin123
- * 
- * 
- * 
- */
